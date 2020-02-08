@@ -65,22 +65,38 @@ namespace CGE
 		}
 		int x, y;
 	};
-	class Character
+	class GameObject
+	{
+	public:
+		GameObject()
+		{
+			this->character = L" ";
+			this->pos.x = 0;
+			this->pos.y = 0;
+			type = 0;
+		}
+		Vec2 pos;
+		std::wstring character;
+		int type;
+	};
+	class Character : public GameObject
 	{
 	public:
 		Character()
 		{
-			character = L'A';
-			pos.x = 0;
-			pos.y = 0;
+			type = 1;
 		}
 		Character(wchar_t character, int x = 0, int y = 0)
+			:
+			Character()
 		{
 			this->character = character;
 			this->pos.x = x;
 			this->pos.y = y;
 		}
 		Character(wchar_t character, Vec2 pos)
+			:
+			Character()
 		{
 			this->character = character;
 			this->pos.x = pos.x;
@@ -88,28 +104,52 @@ namespace CGE
 		}
 		wchar_t GetCharacter()
 		{
-			return character;
+			return character[0];
 		}
 		void SetCharacter(wchar_t character)
 		{
 			this->character = character;
 		}
-		Vec2 pos;
-	private:
-		wchar_t character;
+	};
+	class Text : public GameObject
+	{
+	public:
+		Text()
+		{
+			type = 2;
+		}
+		Text(std::wstring text, int x = 0, int y = 0)
+			:
+			Text()
+		{
+			this->character = text;
+			this->pos.x = x;
+			this->pos.y = y;
+		}
+		std::wstring GetString()
+		{
+			return character;
+		}
+		void SetString(std::wstring text)
+		{
+			character = text;
+		}
 	};
 	class Console
 	{
 	public:
 		Console()
 		{
-			width = 0;
-			height = 0;
-			title = L"ConsoleGameEngine";
-			screen = new wchar_t[width * height];
-			console = NULL;
-			bytes = 0;
-			clear_char = L' ';
+			wchar_t clear_char = L' ';
+			std::wstring title = L"ConsoleGameEngine";
+			int width = 120, height = 30;
+			wchar_t* screen = NULL;
+			HANDLE console = NULL;
+			DWORD bytes = 0;
+		}
+		~Console()
+		{
+			delete[] screen;
 		}
 		bool Create(int width, int height, std::wstring title)
 		{
@@ -150,9 +190,18 @@ namespace CGE
 		{
 			WriteConsoleOutputCharacter(console, screen, width * height, {0, 0}, &bytes);
 		}
-		void Draw(Character character)
+		void Draw(GameObject character)
 		{
-			screen[character.pos.x + width * character.pos.y] = character.GetCharacter();
+			switch(character.type)
+			{
+			case 1:
+				screen[character.pos.x + width * character.pos.y] = character.character[0];
+				break;
+			case 2:
+				for(unsigned int i = 0; i < character.character.length(); i++)
+					screen[character.pos.x + i + width * character.pos.y] = character.character[i];
+				break;
+			}
 		}
 	private:
 		wchar_t clear_char;
