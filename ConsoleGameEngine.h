@@ -5,6 +5,49 @@
 
 namespace CGE
 {
+	class Character
+	{
+	public:
+		Character()
+		{
+			character = L'A';
+			int x = 0;
+			int y = 0;
+		}
+		Character(wchar_t character, int x = 0, int y = 0)
+		{
+			this->character = character;
+			this->x = x;
+			this->y = y;
+		}
+		int GetX()
+		{
+			return x;
+		}
+		int GetY()
+		{
+			return y;
+		}
+		wchar_t GetCharacter()
+		{
+			return character;
+		}
+		void SetX(int x)
+		{
+			this->x = x;
+		}
+		void SetY(int y)
+		{
+			this->y = y;
+		}
+		void SetCharacter(wchar_t character)
+		{
+			this->character = character;
+		}
+	private:
+		wchar_t character;
+		int x, y;
+	};
 	class Console
 	{
 	public:
@@ -53,9 +96,13 @@ namespace CGE
 		{
 			clear_char = character;
 		}
-		void Draw()
+		void Display()
 		{
 			WriteConsoleOutputCharacter(console, screen, width * height, {0, 0}, &bytes);
+		}
+		void Draw(Character character)
+		{
+			screen[character.GetX() + width * character.GetY()] = character.GetCharacter();
 		}
 	private:
 		wchar_t clear_char;

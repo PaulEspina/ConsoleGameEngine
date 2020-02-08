@@ -10,9 +10,12 @@ int main()
 	{
 		std::cout << "Console Buffer Creation Failed!\n";
 	}
+
+	CGE::Character character(L'B', 100, 25);
 	while(1)
 	{
 		engine.Clear();
-		engine.Draw();
+		engine.Draw(character);
+		engine.Display();
 	}
 }
