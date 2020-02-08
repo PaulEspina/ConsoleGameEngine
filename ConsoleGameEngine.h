@@ -5,10 +5,10 @@
 
 namespace CGE
 {
-	class ConsoleGameEngine
+	class Console
 	{
 	public:
-		ConsoleGameEngine()
+		Console()
 		{
 			width = 0;
 			height = 0;
@@ -16,6 +16,7 @@ namespace CGE
 			screen = new wchar_t[width * height];
 			console = NULL;
 			bytes = 0;
+			clear_char = L' ';
 		}
 		bool Create(int width, int height, std::wstring title)
 		{
@@ -35,19 +36,29 @@ namespace CGE
 			SMALL_RECT window_size = {0, 0, (short) width - 1, (short) height - 1};
 			if(!SetConsoleWindowInfo(console, true, &window_size)) return 0;
 			SetConsoleActiveScreenBuffer(console);
-
-
 			CONSOLE_CURSOR_INFO cursor_info;
 			GetConsoleCursorInfo(console, &cursor_info);
 			cursor_info.bVisible = false;
 			SetConsoleCursorInfo(console, &cursor_info);
 			screen = new wchar_t[width * height];
-			for(int i = 0; i < width * height; i++)
-				screen[i] = L' ';
+			Clear();
 			return 1;
 		}
-
+		void Clear()
+		{
+			for(int i = 0; i < width * height; i++)
+				screen[i] = clear_char;
+		}
+		void SetClearCharacter(wchar_t character)
+		{
+			clear_char = character;
+		}
+		void Draw()
+		{
+			WriteConsoleOutputCharacter(console, screen, width * height, {0, 0}, &bytes);
+		}
 	private:
+		wchar_t clear_char;
 		std::wstring title;
 		int width, height;
 		wchar_t* screen;
