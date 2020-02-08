@@ -7,7 +7,8 @@ int main()
 	CGE::Console engine;
 	engine.Create(SC_WIDTH, SC_HEIGHT, L"Test");
 
-	CGE::Character character(L'B', 100, 25);
+	engine.SetClearCharacter(L'-');
+	CGE::Character character(L'B', CGE::Vec2(100, 30));
 	while(1)
 	{
 		engine.Clear();

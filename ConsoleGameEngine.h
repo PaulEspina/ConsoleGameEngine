@@ -16,7 +16,7 @@ namespace CGE
 	{
 	public:
 		Vec2() = default;
-		Vec2(float x_in, float y_in)
+		Vec2(int x_in, int y_in)
 			:
 			x(x_in),
 			y(y_in)
@@ -30,11 +30,11 @@ namespace CGE
 		{
 			return *this = *this + rhs;
 		}
-		Vec2 operator*(float rhs) const
+		Vec2 operator*(int rhs) const
 		{
 			return Vec2(x * rhs, y * rhs);
 		}
-		Vec2& operator*=(float rhs)
+		Vec2& operator*=(int rhs)
 		{
 			return *this = *this * rhs;
 		}
@@ -46,7 +46,7 @@ namespace CGE
 		{
 			return *this = *this - rhs;
 		}
-		float GetMagnitude() const
+		int GetMagnitude() const
 		{
 			return x * x + y * y;
 		}
@@ -56,14 +56,14 @@ namespace CGE
 		}
 		Vec2 GetNormalized() const
 		{
-			const float len = GetMagnitude();
-			if(len != 0.0f)
+			const int len = GetMagnitude();
+			if(len != 0)
 			{
-				return *this * (1.0f / len);
+				return *this * (1 / len);
 			}
 			return *this;
 		}
-		float x, y;
+		int x, y;
 	};
 	class Character
 	{
@@ -71,42 +71,32 @@ namespace CGE
 		Character()
 		{
 			character = L'A';
-			int x = 0;
-			int y = 0;
+			pos.x = 0;
+			pos.y = 0;
 		}
 		Character(wchar_t character, int x = 0, int y = 0)
 		{
 			this->character = character;
-			this->x = x;
-			this->y = y;
+			this->pos.x = x;
+			this->pos.y = y;
 		}
-		int GetX()
+		Character(wchar_t character, Vec2 pos)
 		{
-			return x;
-		}
-		int GetY()
-		{
-			return y;
+			this->character = character;
+			this->pos.x = pos.x;
+			this->pos.y = pos.y;
 		}
 		wchar_t GetCharacter()
 		{
 			return character;
 		}
-		void SetX(int x)
-		{
-			this->x = x;
-		}
-		void SetY(int y)
-		{
-			this->y = y;
-		}
 		void SetCharacter(wchar_t character)
 		{
 			this->character = character;
 		}
+		Vec2 pos;
 	private:
 		wchar_t character;
-		int x, y;
 	};
 	class Console
 	{
@@ -162,7 +152,7 @@ namespace CGE
 		}
 		void Draw(Character character)
 		{
-			screen[character.GetX() + width * character.GetY()] = character.GetCharacter();
+			screen[character.pos.x + width * character.pos.y] = character.GetCharacter();
 		}
 	private:
 		wchar_t clear_char;
