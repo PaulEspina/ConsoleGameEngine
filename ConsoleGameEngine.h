@@ -65,28 +65,16 @@ namespace CGE
 		}
 		int x, y;
 	};
-	class GameObject
-	{
-	public:
-		GameObject()
-		{
-			this->character = L" ";
-			this->pos.x = 0;
-			this->pos.y = 0;
-			type = 0;
-		}
-		Vec2 pos;
-		std::wstring character;
-		int type;
-	};
-	class Character : public GameObject
+	class Character
 	{
 	public:
 		Character()
 		{
-			type = 1;
+			this->character = L" ";
+			this->pos.x = 0;
+			this->pos.y = 0;
 		}
-		Character(wchar_t character, int x = 0, int y = 0)
+		Character(std::wstring character, int x = 0, int y = 0)
 			:
 			Character()
 		{
@@ -110,30 +98,8 @@ namespace CGE
 		{
 			this->character = character;
 		}
-	};
-	class Text : public GameObject
-	{
-	public:
-		Text()
-		{
-			type = 2;
-		}
-		Text(std::wstring text, int x = 0, int y = 0)
-			:
-			Text()
-		{
-			this->character = text;
-			this->pos.x = x;
-			this->pos.y = y;
-		}
-		std::wstring GetString()
-		{
-			return character;
-		}
-		void SetString(std::wstring text)
-		{
-			character = text;
-		}
+		Vec2 pos;
+		std::wstring character;
 	};
 	class Console
 	{
@@ -148,6 +114,8 @@ namespace CGE
 			DWORD bytes = 0;
 		}
 		Console(int width, int height, std::wstring title)
+			:
+			Console()
 		{
 			Create(width, height, title);
 		}
@@ -194,18 +162,11 @@ namespace CGE
 		{
 			WriteConsoleOutputCharacter(console, screen, width * height, {0, 0}, &bytes);
 		}
-		void Draw(GameObject character)
+		void Draw(Character character)
 		{
-			switch(character.type)
-			{
-			case 1:
-				screen[character.pos.x + width * character.pos.y] = character.character[0];
-				break;
-			case 2:
-				for(unsigned int i = 0; i < character.character.length(); i++)
-					screen[character.pos.x + i + width * character.pos.y] = character.character[i];
-				break;
-			}
+			
+			for(unsigned int i = 0; i < character.character.length(); i++)
+				screen[character.pos.x + i + width * character.pos.y] = character.character[i];
 		}
 	private:
 		wchar_t clear_char;
@@ -214,5 +175,14 @@ namespace CGE
 		wchar_t* screen;
 		HANDLE console;
 		DWORD bytes;
+	};
+	class Event
+	{
+	public:
+		Event()
+		{
+
+		}
+	private:
 	};
 }

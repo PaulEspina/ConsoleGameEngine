@@ -9,7 +9,7 @@ int main()
 
 	engine.SetClearCharacter(L' ');
 	CGE::Character character(L'X', CGE::Vec2(100, 30));
-	CGE::Text title(L"Hey");
+	CGE::Character title(L"Hey");
 	while(1)
 	{
 		Sleep(100);
