@@ -147,6 +147,10 @@ namespace CGE
 			HANDLE console = NULL;
 			DWORD bytes = 0;
 		}
+		Console(int width, int height, std::wstring title)
+		{
+			Create(width, height, title);
+		}
 		~Console()
 		{
 			delete[] screen;
