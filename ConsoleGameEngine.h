@@ -128,23 +128,23 @@ namespace CGE
 			this->width = width;
 			this->height = height;
 			this->title = title;
-			console = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, 0);
+			handle = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, 0);
 			CONSOLE_SCREEN_BUFFER_INFO buffer_info;
-			GetConsoleScreenBufferInfo(console, &buffer_info);
+			GetConsoleScreenBufferInfo(handle, &buffer_info);
 			if(width < buffer_info.dwMaximumWindowSize.X || height < buffer_info.dwMaximumWindowSize.Y)
 			{
 				std::cout << "CGE::CREATION::FAILED::INVALID_BUFFER_SIZE\n";
 				return 0;
 			}
 			SetConsoleTitle(title.c_str());
-			SetConsoleScreenBufferSize(console, {(short) width, (short) height});
+			SetConsoleScreenBufferSize(handle, {(short) width, (short) height});
 			SMALL_RECT window_size = {0, 0, (short) width - 1, (short) height - 1};
-			if(!SetConsoleWindowInfo(console, true, &window_size)) return 0;
-			SetConsoleActiveScreenBuffer(console);
+			if(!SetConsoleWindowInfo(handle, true, &window_size)) return 0;
+			SetConsoleActiveScreenBuffer(handle);
 			CONSOLE_CURSOR_INFO cursor_info;
-			GetConsoleCursorInfo(console, &cursor_info);
+			GetConsoleCursorInfo(handle, &cursor_info);
 			cursor_info.bVisible = false;
-			SetConsoleCursorInfo(console, &cursor_info);
+			SetConsoleCursorInfo(handle, &cursor_info);
 			screen = new wchar_t[width * height];
 			Clear();
 			return 1;
@@ -160,7 +160,7 @@ namespace CGE
 		}
 		void Display()
 		{
-			WriteConsoleOutputCharacter(console, screen, width * height, {0, 0}, &bytes);
+			WriteConsoleOutputCharacter(handle, screen, width * height, {0, 0}, &bytes);
 		}
 		void Draw(Character character)
 		{
@@ -168,21 +168,16 @@ namespace CGE
 			for(unsigned int i = 0; i < character.character.length(); i++)
 				screen[character.pos.x + i + width * character.pos.y] = character.character[i];
 		}
+		bool GetKeyState(int i)
+		{
+			return 0x8000 & GetAsyncKeyState(i);
+		}
 	private:
 		wchar_t clear_char;
 		std::wstring title;
 		int width, height;
 		wchar_t* screen;
-		HANDLE console;
+		HANDLE handle;
 		DWORD bytes;
-	};
-	class Event
-	{
-	public:
-		Event()
-		{
-
-		}
-	private:
 	};
 }
