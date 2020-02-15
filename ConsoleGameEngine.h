@@ -10,6 +10,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <string>
+#include <assert.h>
 
 namespace CGE
 {
@@ -157,7 +158,8 @@ namespace CGE
 		}
 		void Draw(Character character)
 		{
-			
+			assert(character.pos.x < width && character.pos.x >= 0 &&
+				   character.pos.y < height && character.pos.y >= 0);
 			for(unsigned int i = 0; i < character.character.length(); i++)
 				screen[character.pos.x + i + width * character.pos.y] = character.character[i];
 		}

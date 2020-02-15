@@ -6,7 +6,7 @@ int main()
 {
 	CGE::Console console(SC_WIDTH, SC_HEIGHT, "Test"); // create console with the specified number of characters(width and height) and window title
 
-	console.SetClearCharacter('A'); // Sets clear character(sort of the background). default is a white space
+	console.SetClearCharacter(' '); // Sets clear character(sort of the background). default is a white space
 	CGE::Character character("X", CGE::Vec2(100, 30)); // creates a drawable object with specified character and coordinates
 	while(1) // basic and terrible game loop
 	{
